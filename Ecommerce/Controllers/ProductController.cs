@@ -149,6 +149,31 @@ namespace Ecommerce.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+        [HttpGet("Search")]
+        public IActionResult Search(string keyword)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(keyword))
+                {
+                    return BadRequest("Please provide a valid search keyword.");
+                }
+
+                var products = _context.Product.Where(p => p.Name.Contains(keyword) || p.Description.Contains(keyword)).ToList();
+
+                if (products.Count == 0)
+                {
+                    return NotFound($"No products found containing the keyword '{keyword}'.");
+                }
+
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
 
         [HttpPost]
         public IActionResult Post([FromBody] Product product)

@@ -32,6 +32,9 @@ namespace Ecommerce.Controllers
             }
             return signup;
 
+           
+
+
         }
         [HttpPost]
         public IActionResult Post([FromBody] Signup signup)
@@ -96,6 +99,27 @@ namespace Ecommerce.Controllers
             else
             {
                 return NotFound(0);
+            }
+        }
+        [HttpGet("GetSignupIdByEmail")]
+        public IActionResult GetSignupIdByEmail(string email)
+        {
+            try
+            {
+                var user = _context.Signup.FirstOrDefault(u => u.Email == email);
+                if (user != null)
+                {
+                    return Ok(user.Signupid);
+                }
+                else
+                {
+                    return NotFound("0");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "An error occurred while processing your request.");
             }
         }
 
