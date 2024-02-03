@@ -124,14 +124,22 @@ namespace Ecommerce.Models
             {
                 entity.Property(e => e.OrderItemID).HasColumnName("ORDERITEMID");
 
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+                entity.Property(e => e.signupId).HasColumnName("SignupId");
+
                 entity.Property(e => e.ProductID).HasColumnName("PRODUCTID");
 
+              
 
                 entity.Property(e => e.Quantity).HasColumnName("Quantity");
 
                 entity.Property(e => e.UnitPrice).HasColumnName("UNITPRICE").HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.TotalPrice).HasColumnName("TOTALPRICE").HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.ImageURL).HasColumnName("ImageURL");
+
+                entity.Property(e => e.ProductName).HasColumnName("ProductName");
 
                 entity.Property(e => e.Isactive)
                 .HasColumnName("ISACTIVE")

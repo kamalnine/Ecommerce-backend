@@ -149,6 +149,48 @@ namespace Ecommerce.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+        [HttpGet("GetProductsByPriceRange")]
+        public IActionResult GetProductsByPriceRange(int minPrice, int maxPrice)
+        {
+            try
+            {
+                var products = _context.Product
+                    .Where(p => p.Price >= minPrice && p.Price <= maxPrice)
+                    .ToList();
+
+                if (products.Count == 0)
+                {
+                    return NotFound("No products found within the specified price range.");
+                }
+
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+        [HttpGet("GetProductImageById/{id}")]
+        public IActionResult GetProductImageById(int id)
+        {
+            try
+            {
+                var product = _context.Product.Find(id);
+
+                if (product == null)
+                {
+                    return NotFound($"Product with ID {id} not found.");
+                }
+
+                return Ok(product.ImageURL);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
         [HttpGet("Search")]
         public IActionResult Search(string keyword)
         {

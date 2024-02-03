@@ -35,6 +35,28 @@ namespace Ecommerce.Controllers
             return adress;
         }
 
+        [HttpGet("GetAdressById/{id}")]
+        public async Task<ActionResult<IEnumerable<Adress>>> GetAdressById(int id)
+        {
+            try
+            {
+                var adresses = await _context.Adresses.Where(a => a.CustomerID == id).ToListAsync();
+
+                if (adresses == null || !adresses.Any())
+                {
+                    return NotFound(); // Return 404 if no addresses with the specified ID are found
+                }
+
+                return Ok(adresses); // Return the addresses if found
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500); // Return 500 Internal Server Error for other exceptions
+            }
+        }
+
+
         [HttpPost]
         public IActionResult Post([FromBody] Adress adress)
         {

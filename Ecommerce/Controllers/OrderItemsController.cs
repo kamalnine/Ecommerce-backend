@@ -30,6 +30,29 @@ namespace Ecommerce.Controllers
           }
             return await _context.OrderItems.ToListAsync();
         }
+        [HttpGet("GetOrderBySignupId")]
+        public IActionResult GetOrderItemsBySignupId(int id)
+        {
+            try
+            {
+                var orderItems = _context.OrderItems.Where(item => item.signupId == id).ToList();
+                if (orderItems.Any())
+                {
+                    return Ok(orderItems);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving order items: {ex}");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+
 
         // GET: api/OrderItems/5
         [HttpGet("{id}")]
@@ -92,6 +115,23 @@ namespace Ecommerce.Controllers
             _context.OrderItems.Add(orderItem);
             await _context.SaveChangesAsync();
 
+            var product = await _context.Product.FindAsync(orderItem.ProductID);
+            if (product != null)
+            {
+                product.Quantity -= orderItem.Quantity;
+                _context.Product.Update(product);
+
+                if(product.Quantity == 0)
+                {
+                    product.Isactive = false;
+                }
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return NotFound($"Product with ID {orderItem.ProductID} not found.");
+            }
+
             return CreatedAtAction("GetOrderItem", new { id = orderItem.OrderItemID }, orderItem);
         }
 
@@ -99,19 +139,35 @@ namespace Ecommerce.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrderItem(int id)
         {
-            if (_context.OrderItems == null)
+            try
             {
-                return NotFound();
+                if (_context.OrderItems == null)
+                {
+                    return NotFound();
+                }
+
+                var orderItem = await _context.OrderItems.FindAsync(id);
+               
+
+
+
+
+
+                if (orderItem == null)
+                {
+                    return NotFound();
+                }
+
+                orderItem.Isactive = false;
+
+
+
+                await _context.SaveChangesAsync();
             }
-            var orderItem = await _context.OrderItems.FindAsync(id);
-            if (orderItem == null)
+            catch(Exception ex)
             {
-                return NotFound();
+                Console.WriteLine(ex.Message);
             }
-
-            _context.OrderItems.Remove(orderItem);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
 

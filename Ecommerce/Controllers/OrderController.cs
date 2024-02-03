@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ecommerce.Models;
+using PayPal.Api;
+using Order = Ecommerce.Models.Order;
 
 namespace Ecommerce.Controllers
 {
@@ -35,7 +37,50 @@ namespace Ecommerce.Controllers
             }
             return orders;
         }
+        [HttpGet("GetOrderbyId")]
+        public IActionResult GetOrderByID(int id)
+        {
+            try
+            {
+                var order = _context.Order.Where(item => item.OrderID == id);
+                if (order.Any())
+                {
+                    return Ok(order);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving order items: {ex}");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
 
+        }
+
+        [HttpGet("GetOrderBySignupId")]
+        public IActionResult GetOrderBySignupId(int id)
+        {
+            try
+            {
+                var order= _context.Order.Where(item => item.CustomerID == id).ToList();
+                if (order.Any())
+                {
+                    return Ok(order);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving order items: {ex}");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
 
 
 
