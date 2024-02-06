@@ -208,6 +208,118 @@ namespace UnitTesting.Controller
             var errorMessage = badRequestResult.Value as string;
             Assert.AreEqual("Deletion error. Please try again later.", errorMessage); // Adjust this based on your actual error message handling
         }
+        [Test]
+        public void CheckEmailExist_EmailExists_ReturnsOkResultWithOne()
+        {
+            // Arrange
+            var email = "test@example.com";
+            var user = new Signup
+            {
+                Signupid = 1,
+                Name = "Test User",
+                Email = email,
+                Password = "password",
+                ConfirmPassword = "password", // Added ConfirmPassword
+                Mobile = 1234567890,
+                Isactive = true
+            };
+
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+            dbContext.Signup.Add(user);
+            dbContext.SaveChanges();
+
+            var controller = new SignupController(dbContext);
+
+            // Act
+            var result = controller.CheckEmailExist(email) as ObjectResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(1, result.Value);
+        }
+
+        [Test]
+        public void CheckEmailExist_EmailDoesNotExist_ReturnsNotFoundResultWithZero()
+        {
+            // Arrange
+            var email = "nonexistent@example.com";
+
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+
+            var controller = new SignupController(dbContext);
+
+            // Act
+            var result = controller.CheckEmailExist(email) as NotFoundObjectResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(404, result.StatusCode);
+            Assert.AreEqual(0, result.Value);
+        }
+
+        [Test]
+        public void GetSignupIdByEmail_EmailExists_ReturnsOkResultWithSignupId()
+        {
+            // Arrange
+            var email = "test@example.com";
+            var userId = 101;
+            var user = new Signup
+            {
+                Signupid = userId,
+                Name = "Test User",
+                Email = email,
+                Password = "password",
+                ConfirmPassword = "password", // Added ConfirmPassword
+                Mobile = 1234567890,
+                Isactive = true
+            };
+
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+            dbContext.Signup.Add(user);
+            dbContext.SaveChanges();
+
+            var controller = new SignupController(dbContext);
+
+            // Act
+            var result = controller.GetSignupIdByEmail(email) as ObjectResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(userId, result.Value);
+        }
+
+        [Test]
+        public void GetSignupIdByEmail_EmailDoesNotExist_ReturnsNotFoundResultWithZero()
+        {
+            // Arrange
+            var email = "nonexistent@example.com";
+
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+
+            var controller = new SignupController(dbContext);
+
+            // Act
+            var result = controller.GetSignupIdByEmail(email) as NotFoundObjectResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(404, result.StatusCode);
+            Assert.AreEqual("0", result.Value);
+        }
 
 
     }

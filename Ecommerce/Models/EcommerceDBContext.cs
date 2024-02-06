@@ -14,8 +14,8 @@ namespace Ecommerce.Models
         }
         public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<Order> Order { get; set; }
-        public virtual DbSet<OrderItem> OrderItems { get; set; }
-        public virtual DbSet<Cart> Cart { get; set; }
+        public virtual DbSet<OrderItems> OrderItems { get; set; }
+      
 
         public virtual DbSet<Review> Review { get; set; }
         public virtual DbSet<Adress> Adresses { get; set; }
@@ -120,7 +120,7 @@ namespace Ecommerce.Models
 
             });
 
-            modelBuilder.Entity<OrderItem>(entity =>
+            modelBuilder.Entity<OrderItems>(entity =>
             {
                 entity.Property(e => e.OrderItemID).HasColumnName("ORDERITEMID");
 
@@ -140,6 +140,8 @@ namespace Ecommerce.Models
                 entity.Property(e => e.ImageURL).HasColumnName("ImageURL");
 
                 entity.Property(e => e.ProductName).HasColumnName("ProductName");
+
+                entity.Property(e => e.Variant).HasColumnName("Variant");
 
                 entity.Property(e => e.Isactive)
                 .HasColumnName("ISACTIVE")
@@ -232,27 +234,7 @@ namespace Ecommerce.Models
 
             });
 
-            modelBuilder.Entity<Cart>(entity =>
-            {
-                entity.Property(e => e.CartID).HasColumnName("ID");
-
-
-                entity.Property(e => e.CustomerID).HasColumnName("CustomerId");
-
-                entity.Property(e => e.ProductID).HasColumnName("ProductId");
-
-                entity.Property(e => e.Quantity).HasColumnName("Quantity");
-
-
-
-
-
-
-
-
-
-
-            });
+          
 
             modelBuilder.Entity<Signup>(entity =>
             {

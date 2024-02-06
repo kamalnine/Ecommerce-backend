@@ -46,7 +46,7 @@ namespace Ecommerce.Controllers
             string userRole = null;
 
 
-            if (email == "kamal@gmail.com" || email == "kamalsutte786@gmail.com")
+            if (email == "kamal@gmail.com")
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
                 userRole = "Admin";

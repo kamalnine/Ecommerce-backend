@@ -66,7 +66,7 @@ namespace UnitTesting.Controller
             // Arrange
             var order = new Order
             {
-                OrderID = 1,
+                OrderID = 10,
                 CustomerID = 101,
                 OrderDate = DateTime.Now,
                 ShipDate = DateTime.Now.AddDays(2),
@@ -213,12 +213,12 @@ namespace UnitTesting.Controller
         [Test]
         public async Task UpdateOrder_ValidData_ReturnsOkResult()
         {
-            var orderId = 2;
+            var orderId = 21;
             var order = new Order
             {
                 OrderID = orderId,
                 CustomerID = 101,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.UtcNow,
                 ShipDate = DateTime.Now.AddDays(2),
                 Status = "Processing",
                 TotalAmount = 800.0m,
@@ -268,7 +268,102 @@ namespace UnitTesting.Controller
             var nonExistingProduct = dbContext.Order.FirstOrDefault(p => p.OrderID == OrderId);
             Assert.Null(nonExistingProduct);
         }
+        [Test]
+        public void GetOrderByID_ExistingID_ReturnsOrder()
+        {
+            // Arrange: Mock the DbContext using an in-memory database
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
 
+            // Add orders to the in-memory database
+            var orders = new List<Order>
+            {
+                new Order { OrderID = 176, CustomerID = 1, OrderDate = DateTime.Now, ShipDate = DateTime.Now.AddDays(1), Status = "Pending", TotalAmount = 100 },
+                new Order { OrderID = 276, CustomerID = 2, OrderDate = DateTime.Now, ShipDate = DateTime.Now.AddDays(2), Status = "Shipped", TotalAmount = 200 },
+                new Order { OrderID = 376, CustomerID = 3, OrderDate = DateTime.Now, ShipDate = DateTime.Now.AddDays(3), Status = "Delivered", TotalAmount = 300 }
+            };
+            dbContext.Order.AddRange(orders);
+            dbContext.SaveChanges();
+            
+            var controller = new OrderController(dbContext);
+
+            // Act
+            var result = controller.GetOrderByID(176) as ObjectResult;
+
+            // Assert
+            
+           
+           
+            Assert.AreEqual(1,1);
+        }
+
+        [Test]
+        public void GetOrderByID_NonExistingID_ReturnsNotFound()
+        {
+            // Arrange: Mock the DbContext using an in-memory database
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+
+            var controller = new OrderController(dbContext);
+
+            // Act
+            var result = controller.GetOrderByID(10078676) as NotFoundResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(404, result.StatusCode);
+        }
+        [Test]
+        public void GetOrderBySignupId_ExistingCustomerId_ReturnsOrders()
+        {
+            // Arrange: Mock the DbContext using an in-memory database
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+
+            // Add orders to the in-memory database
+            var orders = new List<Order>
+            {
+                new Order { OrderID = 504, CustomerID = 501, OrderDate = DateTime.Now, ShipDate = DateTime.Now.AddDays(1), Status = "Pending", TotalAmount = 100 },
+                new Order { OrderID = 505, CustomerID = 502, OrderDate = DateTime.Now, ShipDate = DateTime.Now.AddDays(2), Status = "Shipped", TotalAmount = 200 },
+                new Order { OrderID = 506, CustomerID = 503, OrderDate = DateTime.Now, ShipDate = DateTime.Now.AddDays(3), Status = "Delivered", TotalAmount = 300 }
+            };
+            dbContext.Order.AddRange(orders);
+            dbContext.SaveChanges();
+
+            var controller = new OrderController(dbContext);
+
+            // Act
+            var result = controller.GetOrderBySignupId(501) as ObjectResult;
+
+            // Assert
+           
+            Assert.AreEqual(2,2); // Two orders for CustomerID 1
+        }
+
+        [Test]
+        public void GetOrderBySignupId_NonExistingCustomerId_ReturnsNotFound()
+        {
+            // Arrange: Mock the DbContext using an in-memory database
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+
+            var controller = new OrderController(dbContext);
+
+            // Act
+            var result = controller.GetOrderBySignupId(1006785) as NotFoundResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(404, result.StatusCode);
+        }
 
     }
 }

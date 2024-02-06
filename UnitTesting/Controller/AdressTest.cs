@@ -228,5 +228,68 @@ namespace UnitTesting.Controller
             Assert.Null(nonExistingAdress);
         }
 
+        [Test]
+        public async Task GetAdressById_ValidId_ReturnsAdressesWithOkResult()
+        {
+            // Arrange
+            var customerId = 1;
+            var adresses = new List<Adress>
+            {
+                new Adress { AddressID = 1, CustomerID = customerId, Street = "123 Main St", City = "City1", State = "State1", ZipCode = "12345", Country = "Country1", Isactive = true },
+                new Adress { AddressID = 2, CustomerID = customerId, Street = "456 Elm St", City = "City2", State = "State2", ZipCode = "67890", Country = "Country2", Isactive = true }
+            };
+
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new EcommerceDBContext(dbContextOptions))
+            {
+                context.Adresses.AddRange(adresses);
+                await context.SaveChangesAsync();
+
+                var controller = new AdressesController(context);
+
+                // Act
+                var result = await controller.GetAdressById(customerId) as ActionResult<IEnumerable<Adress>>;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.IsInstanceOf<OkObjectResult>(result.Result);
+
+                var okResult = result.Result as OkObjectResult;
+                Assert.NotNull(okResult);
+
+                var resultAdresses = okResult.Value as List<Adress>;
+                Assert.NotNull(resultAdresses);
+                Assert.AreEqual(adresses.Count, resultAdresses.Count);
+                Assert.IsTrue(adresses.All(a => resultAdresses.Any(ra => ra.AddressID == a.AddressID)));
+            }
+        }
+
+        [Test]
+        public async Task GetAdressById_InvalidId_ReturnsNotFoundResult()
+        {
+            // Arrange
+            var customerId = 1;
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new EcommerceDBContext(dbContextOptions))
+            {
+                var controller = new AdressesController(context);
+
+                // Act
+                var result = await controller.GetAdressById(customerId) as ActionResult<IEnumerable<Adress>>;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.IsInstanceOf<NotFoundResult>(result.Result);
+            }
+        }
+
+       
+
     }
 }

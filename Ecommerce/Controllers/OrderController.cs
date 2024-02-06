@@ -28,13 +28,10 @@ namespace Ecommerce.Controllers
         {
             if (_context.Order.ToList() == null)
             {
-                throw new System.Exception("No Orders Available");
-            }
-            List<Order> orders = _context.Order.ToList();
-            if (orders.Count == 0)
-            {
                 throw new Exception("No Orders Available");
             }
+            List<Order> orders = _context.Order.ToList();
+          
             return orders;
         }
         [HttpGet("GetOrderbyId")]

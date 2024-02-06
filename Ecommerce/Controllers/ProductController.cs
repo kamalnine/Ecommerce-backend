@@ -34,18 +34,17 @@ namespace Ecommerce.Controllers
         public List<Product> GetProductByCategory(string category)
         {
             var productBycategory = _context.Product.Where(p=>p.Category.ToLower() == category.ToLower()).ToList();
+          
             try
             {
-                if (productBycategory.Count == 0)
-                {
-                    throw new System.Exception("No Products Available Of This Category");
-                }
+                return productBycategory;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return productBycategory;
+
+          
             
         }
         [HttpGet("GetProductById/{id}")]
@@ -68,87 +67,7 @@ namespace Ecommerce.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
-        [HttpGet("GetProductsByPriceLessThan29999")]
-        public IActionResult GetProductsByPriceLessThan29999()
-        {
-            try
-            {
-                var products = _context.Product.Where(p => p.Price <= 29999).ToList();
-
-                if (products.Count == 0)
-                {
-                    return NotFound("No products found with price less than 29999.");
-                }
-
-                return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-        }
-        [HttpGet("GetProductsByPriceLessThan49999")]
-        public IActionResult GetProductsByPriceLessThan49999()
-        {
-            try
-            {
-                var products = _context.Product.Where(p => p.Price <= 49999).ToList();
-
-                if (products.Count == 0)
-                {
-                    return NotFound("No products found with price less than 49999.");
-                }
-
-                return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-        }
-
-        [HttpGet("GetProductsByPriceLessThan69999")]
-        public IActionResult GetProductsByPriceLessThan69999()
-        {
-            try
-            {
-                var products = _context.Product.Where(p => p.Price <= 69999).ToList();
-
-                if (products.Count == 0)
-                {
-                    return NotFound("No products found with price less than 69999.");
-                }
-
-                return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-        }
-       [HttpGet("GetProductsByPriceLessThan89999")]
-        public IActionResult GetProductsByPriceLessThan89999()
-        {
-            try
-            {
-                var products = _context.Product.Where(p => p.Price <= 89999).ToList();
-
-                if (products.Count == 0)
-                {
-                    return NotFound("No products found with price less than 89999.");
-                }
-
-                return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-        }
+     
         [HttpGet("GetProductsByPriceRange")]
         public IActionResult GetProductsByPriceRange(int minPrice, int maxPrice)
         {

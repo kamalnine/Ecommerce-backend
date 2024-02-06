@@ -21,14 +21,19 @@ namespace Ecommerce.Controllers
         }
 
         // GET: api/OrderItems
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderItem>>> GetOrderItems()
+        [HttpGet("GetOrderItems")]
+        public List<OrderItems> GetOrderItems()
         {
-          if (_context.OrderItems == null)
-          {
-              return NotFound();
-          }
-            return await _context.OrderItems.ToListAsync();
+            if (_context.OrderItems.ToList() == null)
+            {
+                throw new System.Exception("No Elements Available");
+            }
+            List<OrderItems> products = _context.OrderItems.ToList();
+            if (products.Count == 0)
+            {
+                throw new Exception("No Element Available");
+            }
+            return products;
         }
         [HttpGet("GetOrderBySignupId")]
         public IActionResult GetOrderItemsBySignupId(int id)
@@ -56,7 +61,7 @@ namespace Ecommerce.Controllers
 
         // GET: api/OrderItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderItem>> GetOrderItem(int id)
+        public async Task<ActionResult<OrderItems>> GetOrderItem(int id)
         {
           if (_context.OrderItems == null)
           {
@@ -75,7 +80,7 @@ namespace Ecommerce.Controllers
         // PUT: api/OrderItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderItem(int id, OrderItem orderItem)
+        public async Task<IActionResult> PutOrderItem(int id, OrderItems orderItem)
         {
             if (id != orderItem.OrderItemID)
             {
@@ -106,7 +111,7 @@ namespace Ecommerce.Controllers
         // POST: api/OrderItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<OrderItem>> PostOrderItem(OrderItem orderItem)
+        public async Task<ActionResult<OrderItems>> PostOrderItem(OrderItems orderItem)
         {
           if (_context.OrderItems == null)
           {
@@ -116,6 +121,7 @@ namespace Ecommerce.Controllers
             await _context.SaveChangesAsync();
 
             var product = await _context.Product.FindAsync(orderItem.ProductID);
+            var order = await _context.Order.FindAsync(orderItem.OrderId);
             if (product != null)
             {
                 product.Quantity -= orderItem.Quantity;
@@ -131,7 +137,11 @@ namespace Ecommerce.Controllers
             {
                 return NotFound($"Product with ID {orderItem.ProductID} not found.");
             }
-
+            if(order.ShipDate <= DateTime.Now)
+            {
+                order.Status = "Order Delivered";
+                
+            }
             return CreatedAtAction("GetOrderItem", new { id = orderItem.OrderItemID }, orderItem);
         }
 
@@ -147,18 +157,17 @@ namespace Ecommerce.Controllers
                 }
 
                 var orderItem = await _context.OrderItems.FindAsync(id);
-               
-
-
-
-
-
-                if (orderItem == null)
+                var order = orderItem.OrderId;
+                var ordered = await _context.Order.FindAsync(order);
+             
+                if (orderItem == null || ordered == null)
                 {
                     return NotFound();
                 }
 
                 orderItem.Isactive = false;
+                ordered.Isactive = false;
+               
 
 
 
