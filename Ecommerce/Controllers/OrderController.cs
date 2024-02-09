@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ecommerce.Models;
-using PayPal.Api;
 using Order = Ecommerce.Models.Order;
 
 namespace Ecommerce.Controllers
@@ -28,7 +27,7 @@ namespace Ecommerce.Controllers
         {
             if (_context.Order.ToList() == null)
             {
-                throw new Exception("No Orders Available");
+                throw new System.Exception("No Orders Available");
             }
             List<Order> orders = _context.Order.ToList();
           
@@ -37,8 +36,7 @@ namespace Ecommerce.Controllers
         [HttpGet("GetOrderbyId")]
         public IActionResult GetOrderByID(int id)
         {
-            try
-            {
+         
                 var order = _context.Order.Where(item => item.OrderID == id);
                 if (order.Any())
                 {
@@ -48,20 +46,13 @@ namespace Ecommerce.Controllers
                 {
                     return NotFound();
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error retrieving order items: {ex}");
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-
+           
         }
 
         [HttpGet("GetOrderBySignupId")]
         public IActionResult GetOrderBySignupId(int id)
         {
-            try
-            {
+            
                 var order= _context.Order.Where(item => item.CustomerID == id).ToList();
                 if (order.Any())
                 {
@@ -71,12 +62,7 @@ namespace Ecommerce.Controllers
                 {
                     return NotFound();
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error retrieving order items: {ex}");
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+
         }
 
 
@@ -84,8 +70,7 @@ namespace Ecommerce.Controllers
         [HttpPut("UpdateOrder/{id}")]
         public async Task<IActionResult> UpdateOrder(int id, int customerId, DateTime orderDate, DateTime shipDate, string status, decimal totalAmount)
         {
-            try
-            {
+            
                 var ent = await _context.Order.FindAsync(id);
                 var existingOrder = _context.Order.FirstOrDefault(p => p.OrderID == id);
 
@@ -98,16 +83,9 @@ namespace Ecommerce.Controllers
                 existingOrder.ShipDate = shipDate;
                 existingOrder.Status = status;
                 existingOrder.TotalAmount = totalAmount;
-               
-
+              
                 _context.Entry(existingOrder).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
             return Ok();
 
         }
@@ -126,7 +104,6 @@ namespace Ecommerce.Controllers
                 return BadRequest();
             }
             return Created("Order Added", order);
-
         }
 
       
@@ -148,9 +125,6 @@ namespace Ecommerce.Controllers
             return Ok();
         }
 
-        private bool OrderExists(int id)
-        {
-            return (_context.Order?.Any(e => e.OrderID == id)).GetValueOrDefault();
-        }
+      
     }
 }

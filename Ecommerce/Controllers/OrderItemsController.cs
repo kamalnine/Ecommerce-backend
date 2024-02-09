@@ -24,15 +24,8 @@ namespace Ecommerce.Controllers
         [HttpGet("GetOrderItems")]
         public List<OrderItems> GetOrderItems()
         {
-            if (_context.OrderItems.ToList() == null)
-            {
-                throw new System.Exception("No Elements Available");
-            }
             List<OrderItems> products = _context.OrderItems.ToList();
-            if (products.Count == 0)
-            {
-                throw new Exception("No Element Available");
-            }
+           
             return products;
         }
         [HttpGet("GetOrderBySignupId")]
@@ -59,14 +52,11 @@ namespace Ecommerce.Controllers
 
 
 
-        // GET: api/OrderItems/5
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderItems>> GetOrderItem(int id)
         {
-          if (_context.OrderItems == null)
-          {
-              return NotFound();
-          }
+       
             var orderItem = await _context.OrderItems.FindAsync(id);
 
             if (orderItem == null)
@@ -77,8 +67,7 @@ namespace Ecommerce.Controllers
             return orderItem;
         }
 
-        // PUT: api/OrderItems/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+       
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrderItem(int id, OrderItems orderItem)
         {
@@ -89,27 +78,16 @@ namespace Ecommerce.Controllers
 
             _context.Entry(orderItem).State = EntityState.Modified;
 
-            try
-            {
+            
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            
+           
+          
 
             return NoContent();
         }
 
-        // POST: api/OrderItems
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
         [HttpPost]
         public async Task<ActionResult<OrderItems>> PostOrderItem(OrderItems orderItem)
         {
@@ -151,10 +129,7 @@ namespace Ecommerce.Controllers
         {
             try
             {
-                if (_context.OrderItems == null)
-                {
-                    return NotFound();
-                }
+               
 
                 var orderItem = await _context.OrderItems.FindAsync(id);
                 var order = orderItem.OrderId;
@@ -167,7 +142,10 @@ namespace Ecommerce.Controllers
 
                 orderItem.Isactive = false;
                 ordered.Isactive = false;
-               
+
+                var product = orderItem.ProductID;
+                var productItem = await _context.Product.FindAsync(product);
+                productItem.Quantity += orderItem.Quantity;
 
 
 
@@ -177,7 +155,7 @@ namespace Ecommerce.Controllers
             {
                 Console.WriteLine(ex.Message);
             }
-            return NoContent();
+            return NotFound();
         }
 
         private bool OrderItemExists(int id)

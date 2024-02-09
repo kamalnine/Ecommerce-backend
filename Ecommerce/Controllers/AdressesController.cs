@@ -23,23 +23,16 @@ namespace Ecommerce.Controllers
         [HttpGet("GetAdress")]
         public List<Adress> GetAdress()
         {
-            if (_context.Adresses.ToList() == null)
-            {
-                throw new System.Exception("No Adress Available");
-            }
+           
             List<Adress> adress = _context.Adresses.ToList();
-            if (adress.Count == 0)
-            {
-                throw new Exception("No Adress Available");
-            }
+           
             return adress;
         }
 
         [HttpGet("GetAdressById/{id}")]
         public async Task<ActionResult<IEnumerable<Adress>>> GetAdressById(int id)
         {
-            try
-            {
+          
                 var adresses = await _context.Adresses.Where(a => a.CustomerID == id).ToListAsync();
 
                 if (adresses == null || !adresses.Any())
@@ -48,28 +41,18 @@ namespace Ecommerce.Controllers
                 }
 
                 return Ok(adresses); // Return the addresses if found
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500); // Return 500 Internal Server Error for other exceptions
-            }
+          
         }
 
 
         [HttpPost]
         public IActionResult Post([FromBody] Adress adress)
         {
-            try
-            {
+           
                 _context.Adresses.Add(adress);
                 _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return BadRequest();
-            }
+            
+            
             return Created("Adress Added", adress);
 
         }
@@ -95,8 +78,7 @@ namespace Ecommerce.Controllers
         [HttpPut("UpdateAdress/{id}")]
         public async Task<IActionResult> UpdateAdress(int id, int customerId, string street, string city, string state, string zipCode, string country)
         {
-            try
-            {
+            
                 var ent = await _context.Adresses.FindAsync(id);
                 var existingAdress = _context.Adresses.FirstOrDefault(p => p.AddressID == id);
 
@@ -114,11 +96,7 @@ namespace Ecommerce.Controllers
 
                 _context.Entry(existingAdress).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            
 
             return Ok();
 

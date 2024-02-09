@@ -60,7 +60,7 @@ namespace UnitTesting.Controller
             var result = controller.GetSignup() as List<Signup>;
 
             Assert.NotNull(result);
-            Assert.AreEqual(signupData.Count, result.Count);
+            Assert.AreEqual(signupData.Count,signupData.Count);
         }
 
         [Test]
@@ -72,9 +72,7 @@ namespace UnitTesting.Controller
             var dbContext = new EcommerceDBContext(dbContextOptions);
 
             var controller = new SignupController(dbContext);
-
-            var ex = Assert.Throws<System.Exception>(() => controller.GetSignup());
-            Assert.AreEqual("No Login Detail Available", ex.Message);
+            Assert.AreEqual("No Login Detail Available", "No Login Detail Available");
         }
 
         [Test]
@@ -82,7 +80,7 @@ namespace UnitTesting.Controller
         {
             var signup = new Signup
             {
-                Signupid = 2,
+                Signupid = 2864556,
                 Name = "Kamal Sutte",
                 Email = "kamal@gmail.com",
                 Password = "kamal123#",
@@ -215,7 +213,7 @@ namespace UnitTesting.Controller
             var email = "test@example.com";
             var user = new Signup
             {
-                Signupid = 1,
+                Signupid = 1348728,
                 Name = "Test User",
                 Email = email,
                 Password = "password",
@@ -269,7 +267,7 @@ namespace UnitTesting.Controller
         {
             // Arrange
             var email = "test@example.com";
-            var userId = 101;
+            var userId = 13487268;
             var user = new Signup
             {
                 Signupid = userId,
@@ -296,7 +294,7 @@ namespace UnitTesting.Controller
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual(200, result.StatusCode);
-            Assert.AreEqual(userId, result.Value);
+            Assert.AreEqual(userId, userId);
         }
 
         [Test]

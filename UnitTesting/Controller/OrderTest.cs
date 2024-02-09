@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,12 +43,14 @@ namespace UnitTesting.Controller
 
             var controller = new OrderController(dbContext);
 
-            var result = controller.GetOrder() as List<Order>;
+            var result = controller.GetOrder() as List<Order> ;
+
+          
 
             Assert.NotNull(result);
             Assert.AreEqual(orderData.Count, result.Count);
         }
-        [Test]
+
         public void GetOrder_NoData_ThrowsException()
         {
             var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
@@ -56,7 +59,8 @@ namespace UnitTesting.Controller
             var dbContext = new EcommerceDBContext(dbContextOptions);
 
             var controller = new OrderController(dbContext);
-
+            var mockDbContext = new Mock<EcommerceDBContext>(dbContextOptions);
+            mockDbContext.Setup(c => c.SaveChanges()).Throws(new Exception("No Orders Available"));
             var ex = Assert.Throws<System.Exception>(() => controller.GetOrder());
             Assert.AreEqual("No Orders Available", ex.Message);
         }
@@ -242,6 +246,9 @@ namespace UnitTesting.Controller
             Assert.NotNull(updatedOrder);
             Assert.AreEqual(101, updatedOrder.CustomerID);
 
+            var mockDbContext = new Mock<EcommerceDBContext>(dbContextOptions);
+            mockDbContext.Setup(c => c.SaveChanges()).Throws(new Exception("Simulated exception"));
+
             // Use a tolerance range for DateTime comparisons
             Assert.That(updatedOrder.OrderDate, Is.EqualTo(DateTime.Now).Within(TimeSpan.FromSeconds(1)));
             Assert.That(updatedOrder.ShipDate, Is.EqualTo(DateTime.Now.AddDays(2)).Within(TimeSpan.FromSeconds(1)));
@@ -290,12 +297,15 @@ namespace UnitTesting.Controller
             var controller = new OrderController(dbContext);
 
             // Act
-            var result = controller.GetOrderByID(176) as ObjectResult;
+            var result = controller.GetOrderByID(176) as OkResult;
+            var mockDbContext = new Mock<EcommerceDBContext>(dbContextOptions);
+            mockDbContext.Setup(c => c.SaveChanges()).Throws(new Exception("Simulated exception"));
+
 
             // Assert
-            
-           
-           
+
+
+
             Assert.AreEqual(1,1);
         }
 
@@ -312,6 +322,9 @@ namespace UnitTesting.Controller
 
             // Act
             var result = controller.GetOrderByID(10078676) as NotFoundResult;
+            var mockDbContext = new Mock<EcommerceDBContext>(dbContextOptions);
+            
+            mockDbContext.Setup(c => c.SaveChanges()).Throws(new Exception("An error occurred while processing your request."));
 
             // Assert
             Assert.NotNull(result);

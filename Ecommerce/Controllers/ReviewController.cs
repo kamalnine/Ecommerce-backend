@@ -23,15 +23,9 @@ namespace Ecommerce.Controllers
         [HttpGet("GetReview")]
         public List<Review> GetReview()
         {
-            if (_context.Review.ToList() == null)
-            {
-                throw new System.Exception("No Review Available");
-            }
+            
             List<Review> reviews = _context.Review.ToList();
-            if (reviews.Count == 0)
-            {
-                throw new Exception("No Reviews Available");
-            }
+          
             return reviews;
         }
 
@@ -73,8 +67,7 @@ namespace Ecommerce.Controllers
         [HttpPut("UpdateReview/{id}")]
         public async Task<IActionResult> UpdateReview(int id,int productId, int customerId,int rating,string comment)
         {
-            try
-            {
+           
                 var ent = await _context.Review.FindAsync(id);
                 var existingReview = _context.Review.FirstOrDefault(p => p.ReviewID == id);
 
@@ -92,11 +85,7 @@ namespace Ecommerce.Controllers
 
                 _context.Entry(existingReview).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+          
 
             return Ok();
 

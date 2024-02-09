@@ -20,16 +20,10 @@ namespace Ecommerce.Controllers
         [HttpGet("GetSignup")]
         public List<Signup> GetSignup()
         {
-            if (_context.Signup.ToList() == null)
-            {
-                throw new System.Exception("No Login Detail Available");
-            }
+           
             List<Signup> signup = _context.Signup.ToList();
 
-            if (signup.Count == 0)
-            {
-                throw new System.Exception("No Login Detail Available");
-            }
+          
             return signup;
 
            
@@ -43,11 +37,11 @@ namespace Ecommerce.Controllers
             try
             {
                 var existingUser = _context.Signup.FirstOrDefault(u => u.Email == signup.Email);
-                if (existingUser != null)
+                /*if (existingUser != null)
                 {
                     return BadRequest("Email is already registered. Please login.");
 
-                }
+                }*/
                 _context.Signup.Add(signup);
                 _context.SaveChanges();
 
@@ -71,10 +65,10 @@ namespace Ecommerce.Controllers
             {
                 Signup signup = _context.Signup.Find(id);
 
-                if (signup == null)
+               /* if (signup == null)
                 {
                     return NotFound(); 
-                }
+                }*/
 
                 signup.Isactive = false;
                 _context.SaveChanges();
@@ -104,23 +98,17 @@ namespace Ecommerce.Controllers
         [HttpGet("GetSignupIdByEmail")]
         public IActionResult GetSignupIdByEmail(string email)
         {
-            try
+
+            var user = _context.Signup.FirstOrDefault(u => u.Email == email);
+            if (user != null)
             {
-                var user = _context.Signup.FirstOrDefault(u => u.Email == email);
-                if (user != null)
-                {
-                    return Ok(user.Signupid);
-                }
-                else
-                {
-                    return NotFound("0");
-                }
+                return Ok(user.Signupid);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred while processing your request.");
+                return NotFound("0");
             }
+
         }
 
     }

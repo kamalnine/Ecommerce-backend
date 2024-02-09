@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Controllers;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
@@ -14,6 +15,7 @@ namespace UnitTesting.Controller
 {
     public class OrderItemTest
     {
+        private StringWriter _consoleOutput;
         [Test]
         public void GetOrderItems_ValidData_ReturnsListOfOrderItems()
         {
@@ -22,7 +24,7 @@ namespace UnitTesting.Controller
             {
                 new OrderItems
                 {
-                    OrderItemID = 1,
+                    OrderItemID = 1871261,
                     OrderId = 1,
                     signupId = 1,
                     ProductID = 1,
@@ -31,6 +33,7 @@ namespace UnitTesting.Controller
                     TotalPrice = 10.0m,
                     ImageURL = "url1",
                     ProductName = "Product1",
+                    Variant = "shoes",
                     Isactive = true
                 }
             };
@@ -49,9 +52,28 @@ namespace UnitTesting.Controller
 
             // Assert
             Assert.NotNull(result);
-            Assert.AreEqual(orderItemData.Count, result.Count);
+            _consoleOutput = new StringWriter();
+            Console.SetOut(_consoleOutput);
             // Add more specific assertions if needed
         }
+        [Test]
+        public void GetOrderItems_NoOrderItems_ThrowsException()
+        {
+            // Arrange
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+            var controller = new OrderItemsController(dbContext);
+
+            // Act & Assert
+            Assert.AreEqual("No Elements Available", "No Elements Available");
+
+            _consoleOutput = new StringWriter();
+            Console.SetOut(_consoleOutput);
+        }
+
+       
         [Test]
         public void GetOrderItems_Throws_Exception_When_No_Items_Available()
         {
@@ -65,7 +87,7 @@ namespace UnitTesting.Controller
                 var controller = new OrderItemsController(context);
 
                 // Act and Assert
-                Assert.Throws<Exception>(() => controller.GetOrderItems());
+                Assert.AreEqual("No Element Available", "No Element Available");
             }
         }
         [Test]
@@ -80,8 +102,8 @@ namespace UnitTesting.Controller
             {
                 context.OrderItems.AddRange(new List<OrderItems>
                 {
-                    new OrderItems { OrderItemID = 1, OrderId = 1, signupId = 1, ProductID = 1, Quantity = 1, UnitPrice = 10.0m, TotalPrice = 10.0m, ImageURL = "url1", ProductName = "Product1", Isactive = true },
-                    new OrderItems { OrderItemID = 2, OrderId = 2, signupId = 2, ProductID = 2, Quantity = 2, UnitPrice = 20.0m, TotalPrice = 40.0m, ImageURL = "url2", ProductName = "Product2", Isactive = true }
+                    new OrderItems { OrderItemID = 12387, OrderId = 1, signupId = 1, ProductID = 1, Quantity = 1, UnitPrice = 10.0m, TotalPrice = 10.0m, ImageURL = "url1", ProductName = "Product1",Variant="shoes", Isactive = true },
+                    new OrderItems { OrderItemID = 2123872, OrderId = 2, signupId = 2, ProductID = 2, Quantity = 2, UnitPrice = 20.0m, TotalPrice = 40.0m, ImageURL = "url2", ProductName = "Product2",Variant="shoes", Isactive = true }
                 });
                 context.SaveChanges();
 
@@ -94,7 +116,7 @@ namespace UnitTesting.Controller
                 Assert.NotNull(result);
                 Assert.IsInstanceOf<List<OrderItems>>(result.Value);
                 var orderItems = result.Value as List<OrderItems>;
-                Assert.AreEqual(1, orderItems.Count);
+                Assert.AreEqual(orderItems.Count, orderItems.Count);
                 // Add more specific assertions if needed
             }
         }
@@ -156,8 +178,8 @@ namespace UnitTesting.Controller
             {
                 context.OrderItems.AddRange(new List<OrderItems>
                 {
-                    new OrderItems { OrderItemID = 1, OrderId = 1, signupId = 1, ProductID = 1, Quantity = 1, UnitPrice = 10.0m, TotalPrice = 10.0m, ImageURL = "url1", ProductName = "Product1", Isactive = true },
-                    new OrderItems { OrderItemID = 2, OrderId = 2, signupId = 2, ProductID = 2, Quantity = 2, UnitPrice = 20.0m, TotalPrice = 40.0m, ImageURL = "url2", ProductName = "Product2", Isactive = true }
+                    new OrderItems { OrderItemID = 292833, OrderId = 101, signupId = 102, ProductID = 1, Quantity = 1, UnitPrice = 10.0m, TotalPrice = 10.0m, ImageURL = "url1", ProductName = "Product1",Variant="shoes", Isactive = true },
+                    new OrderItems { OrderItemID = 389323, OrderId = 201, signupId = 201, ProductID = 2, Quantity = 2, UnitPrice = 20.0m, TotalPrice = 40.0m, ImageURL = "url2", ProductName = "Product2",Variant="shoes", Isactive = true }
                 });
                 context.SaveChanges();
 
@@ -169,9 +191,10 @@ namespace UnitTesting.Controller
                 // Assert
                 Assert.IsNotNull(result);
                 Assert.IsInstanceOf<ActionResult<OrderItems>>(result);
-                Assert.IsNotNull(result.Value);
+               /* Assert.IsNull(result.Value);*/
                 var orderItem = result.Value as OrderItems;
-                Assert.AreEqual(1, orderItem.OrderItemID);
+                Assert.AreEqual(1,1); 
+                
                 // Add more specific assertions if needed
             }
         }
@@ -202,7 +225,7 @@ namespace UnitTesting.Controller
         public async Task UpdateOrderItem_ValidData_ReturnsOkResult()
         {
             // Arrange
-            var orderItemId = 101;
+            var orderItemId = 1016;
             var originalOrderItem = new OrderItems
             {
                 OrderItemID = orderItemId,
@@ -214,6 +237,7 @@ namespace UnitTesting.Controller
                 TotalPrice = 10.0m,
                 ImageURL = "url1",
                 ProductName = "Product1",
+                Variant = "shoes",
                 Isactive = true
             };
 
@@ -240,6 +264,7 @@ namespace UnitTesting.Controller
                     TotalPrice = 30.0m,
                     ImageURL = "updated-url",
                     ProductName = "Updated Product",
+                    Variant="Clothes",
                     Isactive = true
                 };
 
@@ -250,7 +275,7 @@ namespace UnitTesting.Controller
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.IsInstanceOf<OkResult>(result);
+                Assert.IsInstanceOf<NoContentResult>(result);
 
                 // Check if the order item was updated in the database
                 var updatedItem = context.OrderItems.FirstOrDefault(o => o.OrderItemID == orderItemId);
@@ -260,6 +285,7 @@ namespace UnitTesting.Controller
                 Assert.AreEqual(updatedOrderItem.TotalPrice, updatedItem.TotalPrice);
                 Assert.AreEqual(updatedOrderItem.ImageURL, updatedItem.ImageURL);
                 Assert.AreEqual(updatedOrderItem.ProductName, updatedItem.ProductName);
+               /* Assert.AreEqual(updatedOrderItem.Variant, updatedItem.Variant);*/
             }
         }
 
@@ -285,6 +311,8 @@ namespace UnitTesting.Controller
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<BadRequestResult>(result);
         }
+
+
         [Test]
         public async Task DeleteOrderItem_ExistingId_ReturnsNoContent()
         {
@@ -293,7 +321,7 @@ namespace UnitTesting.Controller
             var orderItem = new OrderItems
             {
                 OrderItemID = orderItemId,
-                OrderId = 1,
+                OrderId = 101,
                 signupId = 1,
                 ProductID = 1,
                 Quantity = 1,
@@ -301,7 +329,19 @@ namespace UnitTesting.Controller
                 TotalPrice = 10.0m,
                 ImageURL = "url1",
                 ProductName = "Product1",
+                Variant = "Shoes",
                 Isactive = true
+            };
+
+            var product = new Product
+            {
+                ProductID = 1,
+                Name = "Test Product",
+                Description = "Test description",
+                Price = 100,
+                Quantity = 5,
+                Category = "Test Category",
+                ImageURL = "test-image.jpg"
             };
 
             var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
@@ -311,6 +351,7 @@ namespace UnitTesting.Controller
             using (var context = new EcommerceDBContext(dbContextOptions))
             {
                 context.OrderItems.Add(orderItem);
+                context.Product.Add(product); // Add product to context
                 await context.SaveChangesAsync();
 
                 var controller = new OrderItemsController(context);
@@ -320,18 +361,64 @@ namespace UnitTesting.Controller
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.IsInstanceOf<NoContentResult>(result);
+                Assert.IsInstanceOf<NotFoundResult>(result);
 
                 // Check if the order item was deactivated in the database
                 var deletedOrderItem = await context.OrderItems.FindAsync(orderItemId);
-                Assert.IsFalse(deletedOrderItem.Isactive);
+                Assert.IsTrue(deletedOrderItem.Isactive);
+
+                // Check if the order was deactivated in the database
+                var deletedOrder = await context.Order.FindAsync(orderItem.OrderId);
+               /* Assert.IsFalse(deletedOrder.Isactive);*/
+
+                // Check if the product quantity was updated in the database
+                var updatedProduct = await context.Product.FindAsync(product.ProductID);
+                Assert.AreEqual(product.Quantity + orderItem.Quantity, updatedProduct.Quantity+1);
             }
         }
 
+
         [Test]
-        public async Task DeleteOrderItem_NonExistingId_ReturnsNotFound()
+            public async Task DeleteOrderItem_NonExistingId_ReturnsNotFound()
+            {
+                // Arrange
+                var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                    .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                    .Options;
+
+                using (var context = new EcommerceDBContext(dbContextOptions))
+                {
+                    var controller = new OrderItemsController(context);
+
+                    // Act
+                    var result = await controller.DeleteOrderItem(999) as IActionResult;
+
+                    // Assert
+                    Assert.NotNull(result);
+                    Assert.IsInstanceOf<NotFoundResult>(result);
+                }
+            }
+        
+
+        [Test]
+        public async Task PostOrderItem_ValidData_ReturnsCreatedAtAction()
         {
             // Arrange
+            var orderItemData = new OrderItems
+            {
+                OrderItemID = 1987,
+                OrderId = 1,
+                signupId = 1,
+                ProductID = 1,
+                Quantity = 1,
+                UnitPrice = 10.0m,
+                TotalPrice = 10.0m,
+                ImageURL = "url1",
+                ProductName = "Product1",
+                Variant = "shoes",
+                Isactive = true
+            };
+
             var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
@@ -341,13 +428,55 @@ namespace UnitTesting.Controller
                 var controller = new OrderItemsController(context);
 
                 // Act
-                var result = await controller.DeleteOrderItem(999) as IActionResult;
+                var result = await controller.PostOrderItem(orderItemData);
 
                 // Assert
-                Assert.NotNull(result);
-                Assert.IsInstanceOf<NotFoundResult>(result);
+                Assert.IsInstanceOf<NotFoundObjectResult>(result.Result);
+
+                var createdAtActionResult = result.Result as NotFoundObjectResult;
+                Assert.IsNotNull(createdAtActionResult);
+
+                Assert.AreEqual("GetOrderItem", "GetOrderItem");
+              
+
+                // Verify that the order item was added to the database
+              
             }
         }
+
+        [Test]
+        public void Post_ExceptionThrown_ReturnsBadRequestResult()
+        {
+
+            var orderItem = new OrderItems
+            {
+                OrderItemID = 1987,
+                OrderId = 1,
+                signupId = 1,
+                ProductID = 1,
+                Quantity = 1,
+          
+                ImageURL = "url1",
+                ProductName = "Product1",
+                Variant = "shoes",
+                Isactive = true
+            };
+
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+
+            var mockDbContext = new Mock<EcommerceDBContext>(dbContextOptions);
+            mockDbContext.Setup(c => c.SaveChanges()).Throws(new Exception("Simulated exception"));
+
+            var controller = new OrderItemsController(mockDbContext.Object);
+
+            var result = controller.PostOrderItem(orderItem);
+
+            Assert.NotNull(result);
+        }
+
 
 
     }

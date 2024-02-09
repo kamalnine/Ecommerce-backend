@@ -19,15 +19,10 @@ namespace Ecommerce.Controllers
         [HttpGet("GetProduct")]
         public List<Product> GetProduct()
         {
-            if (_context.Product.ToList() == null)
-            {
-                throw new System.Exception("No Elements Available");
-            }
+          
+          
             List<Product> products = _context.Product.ToList();
-            if (products.Count == 0)
-            {
-                throw new Exception("No Element Available");
-            }
+           
             return products;
         }
         [HttpGet("GetProductByCategory")]
@@ -35,23 +30,16 @@ namespace Ecommerce.Controllers
         {
             var productBycategory = _context.Product.Where(p=>p.Category.ToLower() == category.ToLower()).ToList();
           
-            try
-            {
+            
                 return productBycategory;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
+           
           
             
         }
         [HttpGet("GetProductById/{id}")]
         public IActionResult GetProductById(int id)
         {
-            try
-            {
+           
                 var product = _context.Product.Find(id);
 
                 if (product == null)
@@ -60,19 +48,13 @@ namespace Ecommerce.Controllers
                 }
 
                 return Ok(product);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+          
         }
      
         [HttpGet("GetProductsByPriceRange")]
         public IActionResult GetProductsByPriceRange(int minPrice, int maxPrice)
         {
-            try
-            {
+
                 var products = _context.Product
                     .Where(p => p.Price >= minPrice && p.Price <= maxPrice)
                     .ToList();
@@ -83,38 +65,24 @@ namespace Ecommerce.Controllers
                 }
 
                 return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            
+           
         }
         [HttpGet("GetProductImageById/{id}")]
         public IActionResult GetProductImageById(int id)
         {
-            try
-            {
+           
                 var product = _context.Product.Find(id);
 
-                if (product == null)
-                {
-                    return NotFound($"Product with ID {id} not found.");
-                }
+                
 
                 return Ok(product.ImageURL);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+           
         }
         [HttpGet("Search")]
         public IActionResult Search(string keyword)
         {
-            try
-            {
+           
                 if (string.IsNullOrWhiteSpace(keyword))
                 {
                     return BadRequest("Please provide a valid search keyword.");
@@ -128,12 +96,8 @@ namespace Ecommerce.Controllers
                 }
 
                 return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            
+            
         }
 
         [HttpPost]
@@ -171,8 +135,7 @@ namespace Ecommerce.Controllers
         [HttpPut("UpdateProduct/{id}")]
         public async Task<IActionResult> UpdateProduct(int id, string name, string description, int price, int quantity, string category, string imageurl)
         {
-            try
-            {
+            
                 var ent = await _context.Product.FindAsync(id);
                 var existingProduct= _context.Product.FirstOrDefault(p => p.ProductID == id);
 
@@ -189,11 +152,7 @@ namespace Ecommerce.Controllers
 
                 _context.Entry(existingProduct).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            
 
             return Ok();
 
