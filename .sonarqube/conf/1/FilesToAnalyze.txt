@@ -1,10 +1,12 @@
 ﻿C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\Controller\AdressTest.cs
+C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\Controller\CartControllerTests.cs
 C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\Controller\LoginTest.cs
 C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\Controller\OrderItemTest.cs
 C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\Controller\OrderTest.cs
 C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\Controller\ProductTest.cs
 C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\Controller\ReviewTest.cs
 C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\Controller\SignupTest.cs
+C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\Controller\WishlistControllerTests.cs
 C:\Users\MAVKamal\source\repos\Ecommerce\UnitTesting\GlobalUsings.cs
 C:\Users\MAVKamal\.nuget\packages\microsoft.net.test.sdk\17.6.0\build\netcoreapp3.1\Microsoft.NET.Test.Sdk.Program.cs
 C:\Users\MAVKamal\.nuget\packages\microsoft.testplatform.testhost\17.6.0\build\netcoreapp3.1\x64\testhost.exe

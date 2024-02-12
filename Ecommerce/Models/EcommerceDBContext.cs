@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+
 namespace Ecommerce.Models
 {
+
     public partial class EcommerceDBContext : DbContext
     {
         public EcommerceDBContext()
@@ -21,6 +23,10 @@ namespace Ecommerce.Models
         public virtual DbSet<Adress> Adresses { get; set; }
 
         public virtual DbSet<Signup> Signup { get; set; }
+
+        public virtual DbSet<Wishlist> Wishlist { get; set; }
+
+        public virtual DbSet<Cart> Cart { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -85,6 +91,63 @@ namespace Ecommerce.Models
                
             });
 
+            modelBuilder.Entity<Wishlist>(entity =>
+            {
+                entity.ToTable("Wishlist");
+
+                entity.HasKey(e => e.WishlistID);
+                entity.Property(e => e.WishlistID).HasColumnName("ID");
+                entity.Property(e => e.ProductID).IsRequired();
+                entity.Property(e=>e.CustomerID).IsRequired();
+
+
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("ISACTIVE")
+                    .HasDefaultValueSql("((1))");
+                entity.HasQueryFilter(t => t.Isactive == true);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasColumnName("Description")
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Price)
+                .IsRequired()
+                .HasColumnName("Price")
+                .HasMaxLength(100)
+                .HasColumnType("decimal(18, 2)")
+                .IsUnicode(false);
+
+                entity.Property(e => e.Quantity)
+                .IsRequired()
+                .HasColumnName("Quantity")
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+                entity.Property(e => e.Category)
+                .IsRequired()
+                .HasColumnName("Category")
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+                entity.Property(e => e.ImageURL)
+                .IsRequired()
+                .HasColumnName("ImageURL")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+
+
+            });
+
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.Property(e => e.OrderID).HasColumnName("ID");
@@ -141,6 +204,45 @@ namespace Ecommerce.Models
                 entity.Property(e => e.ProductName).HasColumnName("ProductName");
 
                 entity.Property(e => e.Variant).HasColumnName("Variant");
+
+                entity.Property(e => e.Isactive)
+                .HasColumnName("ISACTIVE")
+                .HasDefaultValueSql("((1))");
+                entity.HasQueryFilter(t => t.Isactive == true);
+            });
+
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.Property(e => e.CartID).HasColumnName("CARTID");
+
+              
+                entity.Property(e => e.CustomerID).HasColumnName("SignupId");
+
+                entity.Property(e => e.ProductID).HasColumnName("PRODUCTID");
+               
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasColumnName("Description")
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+
+                entity.Property(e => e.Quantity).HasColumnName("Quantity");
+
+                entity.Property(e => e.Price).HasColumnName("UNITPRICE").HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.TotalPrice).HasColumnName("TOTALPRICE").HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.ImageURL).HasColumnName("ImageURL");
+
+                entity.Property(e => e.Name).HasColumnName("ProductName");
+
+                entity.Property(e => e.Variant).HasColumnName("Variant");
+                 entity.Property(e => e.Category)
+                .IsRequired()
+                .HasColumnName("Category")
+                .HasMaxLength(100)
+                .IsUnicode(false);
 
                 entity.Property(e => e.Isactive)
                 .HasColumnName("ISACTIVE")

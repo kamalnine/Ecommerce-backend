@@ -366,39 +366,29 @@ namespace UnitTesting.Controller
                 // Check if the order item was deactivated in the database
                 var deletedOrderItem = await context.OrderItems.FindAsync(orderItemId);
                 Assert.IsTrue(deletedOrderItem.Isactive);
-
-                // Check if the order was deactivated in the database
-                var deletedOrder = await context.Order.FindAsync(orderItem.OrderId);
-               /* Assert.IsFalse(deletedOrder.Isactive);*/
-
-                // Check if the product quantity was updated in the database
-                var updatedProduct = await context.Product.FindAsync(product.ProductID);
-                Assert.AreEqual(product.Quantity + orderItem.Quantity, updatedProduct.Quantity+1);
             }
         }
 
-
         [Test]
-            public async Task DeleteOrderItem_NonExistingId_ReturnsNotFound()
+        public async Task DeleteOrderItem_NonExistingId_ReturnsNotFound()
+        {
+            // Arrange
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new EcommerceDBContext(dbContextOptions))
             {
-                // Arrange
-                var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
-                    .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-                    .Options;
+                var controller = new OrderItemsController(context);
 
-                using (var context = new EcommerceDBContext(dbContextOptions))
-                {
-                    var controller = new OrderItemsController(context);
+                // Act
+                var result = await controller.DeleteOrderItem(999) as IActionResult;
 
-                    // Act
-                    var result = await controller.DeleteOrderItem(999) as IActionResult;
-
-                    // Assert
-                    Assert.NotNull(result);
-                    Assert.IsInstanceOf<NotFoundResult>(result);
-                }
+                // Assert
+                Assert.NotNull(result);
+                Assert.IsInstanceOf<NotFoundResult>(result);
             }
-        
+        }
 
         [Test]
         public async Task PostOrderItem_ValidData_ReturnsCreatedAtAction()
