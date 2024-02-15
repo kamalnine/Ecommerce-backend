@@ -51,10 +51,7 @@ namespace Ecommerce.Controllers
         {
             var carts = await _context.Cart.Where(c => c.CustomerID == customerId).ToListAsync();
 
-            if (carts == null || !carts.Any())
-            {
-                return NotFound();
-            }
+           
 
             _context.Cart.RemoveRange(carts);
             await _context.SaveChangesAsync();
@@ -66,10 +63,7 @@ namespace Ecommerce.Controllers
         {
             var cartItem = await _context.Cart.FirstOrDefaultAsync(c => c.ProductID == productId);
 
-            if (cartItem == null)
-            {
-                return NotFound();
-            }
+            
 
             cartItem.Quantity = quantity;
             await _context.SaveChangesAsync();
@@ -82,11 +76,7 @@ namespace Ecommerce.Controllers
         {
             var cartItem = await _context.Cart.FirstOrDefaultAsync(c => c.ProductID == productId);
 
-            if (cartItem == null)
-            {
-                return NotFound();
-            }
-
+            
             cartItem.Variant = variant;
             await _context.SaveChangesAsync();
 

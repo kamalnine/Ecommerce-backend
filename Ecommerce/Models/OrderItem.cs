@@ -21,6 +21,9 @@ namespace Ecommerce.Models
         public string ProductName { get; set; }
 
         public string Variant { get; set; }
+
+        public DateTime OrderDate { get; set; }
+        public DateTime ShipDate { get; set; }
         public bool? Isactive { get; set; }
     }
 }

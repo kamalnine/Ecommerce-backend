@@ -34,6 +34,8 @@ namespace UnitTesting.Controller
                     ImageURL = "url1",
                     ProductName = "Product1",
                     Variant = "shoes",
+                    OrderDate = DateTime.Now,
+                    ShipDate = DateTime.Now,
                     Isactive = true
                 }
             };
@@ -102,8 +104,10 @@ namespace UnitTesting.Controller
             {
                 context.OrderItems.AddRange(new List<OrderItems>
                 {
-                    new OrderItems { OrderItemID = 12387, OrderId = 1, signupId = 1, ProductID = 1, Quantity = 1, UnitPrice = 10.0m, TotalPrice = 10.0m, ImageURL = "url1", ProductName = "Product1",Variant="shoes", Isactive = true },
-                    new OrderItems { OrderItemID = 2123872, OrderId = 2, signupId = 2, ProductID = 2, Quantity = 2, UnitPrice = 20.0m, TotalPrice = 40.0m, ImageURL = "url2", ProductName = "Product2",Variant="shoes", Isactive = true }
+                    new OrderItems { OrderItemID = 12387, OrderId = 1, signupId = 1, ProductID = 1, Quantity = 1, UnitPrice = 10.0m, TotalPrice = 10.0m, ImageURL = "url1", ProductName = "Product1",Variant="shoes", OrderDate = DateTime.Now,
+                    ShipDate = DateTime.Now, Isactive = true },
+                    new OrderItems { OrderItemID = 2123872, OrderId = 2, signupId = 2, ProductID = 2, Quantity = 2, UnitPrice = 20.0m, TotalPrice = 40.0m, ImageURL = "url2", ProductName = "Product2",Variant="shoes", OrderDate = DateTime.Now,
+                    ShipDate = DateTime.Now, Isactive = true }
                 });
                 context.SaveChanges();
 
@@ -178,8 +182,10 @@ namespace UnitTesting.Controller
             {
                 context.OrderItems.AddRange(new List<OrderItems>
                 {
-                    new OrderItems { OrderItemID = 292833, OrderId = 101, signupId = 102, ProductID = 1, Quantity = 1, UnitPrice = 10.0m, TotalPrice = 10.0m, ImageURL = "url1", ProductName = "Product1",Variant="shoes", Isactive = true },
-                    new OrderItems { OrderItemID = 389323, OrderId = 201, signupId = 201, ProductID = 2, Quantity = 2, UnitPrice = 20.0m, TotalPrice = 40.0m, ImageURL = "url2", ProductName = "Product2",Variant="shoes", Isactive = true }
+                    new OrderItems { OrderItemID = 292833, OrderId = 101, signupId = 102, ProductID = 1, Quantity = 1, UnitPrice = 10.0m, TotalPrice = 10.0m, ImageURL = "url1", ProductName = "Product1",Variant="shoes" ,OrderDate = DateTime.Now,
+                    ShipDate = DateTime.Now, Isactive = true },
+                    new OrderItems { OrderItemID = 389323, OrderId = 201, signupId = 201, ProductID = 2, Quantity = 2, UnitPrice = 20.0m, TotalPrice = 40.0m, ImageURL = "url2", ProductName = "Product2",Variant="shoes", OrderDate = DateTime.Now,
+                    ShipDate = DateTime.Now, Isactive = true }
                 });
                 context.SaveChanges();
 
@@ -238,6 +244,8 @@ namespace UnitTesting.Controller
                 ImageURL = "url1",
                 ProductName = "Product1",
                 Variant = "shoes",
+                OrderDate = DateTime.Now,
+                ShipDate = DateTime.Now,
                 Isactive = true
             };
 
@@ -265,6 +273,8 @@ namespace UnitTesting.Controller
                     ImageURL = "updated-url",
                     ProductName = "Updated Product",
                     Variant="Clothes",
+                    OrderDate = DateTime.Now,
+                    ShipDate = DateTime.Now,
                     Isactive = true
                 };
 
@@ -330,6 +340,8 @@ namespace UnitTesting.Controller
                 ImageURL = "url1",
                 ProductName = "Product1",
                 Variant = "Shoes",
+                OrderDate = DateTime.Now,
+                ShipDate = DateTime.Now,
                 Isactive = true
             };
 
@@ -406,6 +418,8 @@ namespace UnitTesting.Controller
                 ImageURL = "url1",
                 ProductName = "Product1",
                 Variant = "shoes",
+                OrderDate = DateTime.Now,
+                ShipDate = DateTime.Now,
                 Isactive = true
             };
 
@@ -449,6 +463,8 @@ namespace UnitTesting.Controller
                 ImageURL = "url1",
                 ProductName = "Product1",
                 Variant = "shoes",
+                OrderDate = DateTime.Now,
+                ShipDate = DateTime.Now,
                 Isactive = true
             };
 

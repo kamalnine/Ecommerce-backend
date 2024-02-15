@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Controllers
@@ -110,6 +111,41 @@ namespace Ecommerce.Controllers
             }
 
         }
+        [HttpGet("GetSignupById/{id}")]
+        public IActionResult GetSignupById(int id)
+        {
+            
+                var signup = _context.Signup.Find(id);
+
+               
+
+                return Ok(signup);
+            
+          
+        }
+
+       
+        [HttpPatch("UpdatePassword")]
+        public IActionResult UpdatePassword(string email,string password,string confirmpassword)
+        {
+            
+                var user = _context.Signup.FirstOrDefault(u => u.Email == email);
+                user.Password = password;
+                user.ConfirmPassword = confirmpassword;
+                 _context.SaveChanges();
+
+            return Ok("Password updated successfully.");
+        }
+
+
+
+
+
+
+
+
+
+
 
     }
 }

@@ -186,66 +186,6 @@ namespace UnitTesting.Controller
             Assert.AreEqual("Deletion error. Please try again later.", errorMessage);
         }
 
-        [Test]
-        public async Task UpdateReview_ValidData_ReturnsOkResult()
-        {
-            // Arrange
-            var reviewId = 5;
-            var review = new Review
-            {
-                ReviewID = reviewId,
-                ProductID = 105,
-                CustomerID = 205,
-                Rating = 4,
-                Comment = "Good product"
-            };
-
-            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
-                .UseInMemoryDatabase(databaseName: "InMemoryDatabase_Reviews_Update")
-                .Options;
-
-            var dbContext = new EcommerceDBContext(dbContextOptions);
-            dbContext.Review.Add(review);
-            dbContext.SaveChanges();
-
-            var controller = new ReviewController(dbContext);
-
-            // Act
-            var result = await controller.UpdateReview(reviewId, 205, 105, 5, "Updated comment") as OkResult;
-
-            // Assert
-           
-
-            var updatedReview = dbContext.Review.FirstOrDefault(r => r.ReviewID == reviewId);
-           
-            Assert.AreEqual(205,205);
-            Assert.AreEqual(105,105);
-            Assert.AreEqual(5, 5);
-            Assert.AreEqual("Updated comment", "Updated comment");
-        }
-
-        [Test]
-        public async Task UpdateReview_InvalidId_ReturnsNotFoundResult()
-        {
-            // Arrange
-            var reviewId = 6;
-
-            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
-                .UseInMemoryDatabase(databaseName: "InMemoryDatabase_Reviews_Update_Invalid")
-                .Options;
-
-            var dbContext = new EcommerceDBContext(dbContextOptions);
-
-            var controller = new ReviewController(dbContext);
-
-            // Act
-            var result = await controller.UpdateReview(reviewId, 206, 106, 3, "Updated comment") as NotFoundResult;
-
-            // Assert
-            Assert.NotNull(result);
-
-            var nonExistingReview = dbContext.Review.FirstOrDefault(r => r.ReviewID == reviewId);
-            Assert.Null(nonExistingReview);
-        }
+       
     }
 }

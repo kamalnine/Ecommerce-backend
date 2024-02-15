@@ -205,6 +205,14 @@ namespace Ecommerce.Models
 
                 entity.Property(e => e.Variant).HasColumnName("Variant");
 
+                entity.Property(e => e.OrderDate)
+                   .HasColumnName("ORDERDATE")
+                   .HasColumnType("date");
+
+                entity.Property(e => e.ShipDate)
+                    .HasColumnName("SHIPDATE")
+                    .HasColumnType("date");
+
                 entity.Property(e => e.Isactive)
                 .HasColumnName("ISACTIVE")
                 .HasDefaultValueSql("((1))");

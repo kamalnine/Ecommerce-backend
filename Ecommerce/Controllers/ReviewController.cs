@@ -64,33 +64,7 @@ namespace Ecommerce.Controllers
             }
             return Ok();
         }
-        [HttpPut("UpdateReview/{id}")]
-        public async Task<IActionResult> UpdateReview(int id,int productId, int customerId,int rating,string comment)
-        {
-           
-                var ent = await _context.Review.FindAsync(id);
-                var existingReview = _context.Review.FirstOrDefault(p => p.ReviewID == id);
-
-                if (existingReview == null)
-                {
-                    return NotFound();
-                }
-                existingReview.ProductID = productId;
-                existingReview.CustomerID = customerId;
-                
-                existingReview.Rating = rating;
-                existingReview.Comment = comment;
-
-
-
-                _context.Entry(existingReview).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                await _context.SaveChangesAsync();
-          
-
-            return Ok();
-
-        }
-
+        
 
     }
 }

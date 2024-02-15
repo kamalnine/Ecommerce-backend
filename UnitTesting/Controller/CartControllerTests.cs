@@ -118,5 +118,97 @@ namespace Ecommerce.Tests
             Assert.IsInstanceOf<List<Cart>>(result.Value);
             Assert.AreEqual(1, result.Value.Count());
         }
+
+        [Test]
+        public async Task DeleteCartByCustomer_WhenValidCustomerId_ReturnsNoContentResult()
+        {
+            // Arrange
+            var customerId = 1; // Provide a valid customer ID
+            var cart = new Cart
+            {
+                // Set all properties for a valid cart
+                CustomerID = customerId,
+                ProductID = 1,
+                Name = "Product Name",
+                Description = "Product Description",
+                Price = 10.99m,
+                Quantity = 2,
+                Variant = "Product Variant",
+                Category = "Product Category",
+                ImageURL = "https://example.com/image.jpg",
+                TotalPrice = 21.98m,
+                Isactive = true
+            };
+            _context.Cart.Add(cart);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _controller.DeleteCartByCustomer(customerId);
+
+            // Assert
+            Assert.IsInstanceOf<NoContentResult>(result);
+        }
+
+        [Test]
+        public async Task UpdateQuantity_WhenValidProductId_ReturnsNoContentResult()
+        {
+            // Arrange
+            var productId = 1; // Provide a valid product ID
+            var quantity = 5; // Provide a valid quantity
+            var cart = new Cart
+            {
+                // Set all properties for a valid cart
+                CustomerID = 1,
+                ProductID = productId,
+                Name = "Product Name",
+                Description = "Product Description",
+                Price = 10.99m,
+                Quantity = 2,
+                Variant = "Product Variant",
+                Category = "Product Category",
+                ImageURL = "https://example.com/image.jpg",
+                TotalPrice = 21.98m,
+                Isactive = true
+            };
+            _context.Cart.Add(cart);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _controller.UpdateQuantity(productId, quantity);
+
+            // Assert
+            Assert.IsInstanceOf<NoContentResult>(result);
+        }
+
+        [Test]
+        public async Task UpdateVariant_WhenValidProductId_ReturnsNoContentResult()
+        {
+            // Arrange
+            var productId = 1; // Provide a valid product ID
+            var variant = "New Variant"; // Provide a valid variant
+            var cart = new Cart
+            {
+                // Set all properties for a valid cart
+                CustomerID = 1,
+                ProductID = productId,
+                Name = "Product Name",
+                Description = "Product Description",
+                Price = 10.99m,
+                Quantity = 2,
+                Variant = "Product Variant",
+                Category = "Product Category",
+                ImageURL = "https://example.com/image.jpg",
+                TotalPrice = 21.98m,
+                Isactive = true
+            };
+            _context.Cart.Add(cart);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _controller.UpdateVariant(productId, variant);
+
+            // Assert
+            Assert.IsInstanceOf<NoContentResult>(result);
+        }
     }
 }

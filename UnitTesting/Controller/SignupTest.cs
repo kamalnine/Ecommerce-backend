@@ -318,7 +318,91 @@ namespace UnitTesting.Controller
             Assert.AreEqual(404, result.StatusCode);
             Assert.AreEqual("0", result.Value);
         }
+        [Test]
+        public async Task GetSignupById_ExistingId_ReturnsOkResult()
+        {
+            // Arrange
+            var signup = new Signup
+            {
+                Signupid = 1,
+                Name = "John Doe",
+                Email = "john.doe@example.com",
+                Password = "password123",
+                Mobile = 1234567890,
+                Isactive = true,
+                ConfirmPassword = "password123"
+            };
 
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+               .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+               .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+
+            var controller = new SignupController(dbContext);
+
+            // Act
+           
+
+            // Act
+            var result = controller.GetSignupById(1) ;
+
+            // Assert
+            Assert.IsInstanceOf<OkObjectResult>(result);
+        }
+
+        [Test]
+        public async Task GetSignupById_NonExistingId_ReturnsNotFoundResult()
+        {
+            // Arrange: No signup with ID 2 exists in the database
+
+            // Act
+
+            var dbContextOptions = new DbContextOptionsBuilder<EcommerceDBContext>()
+             .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+             .Options;
+            var dbContext = new EcommerceDBContext(dbContextOptions);
+
+            var controller = new SignupController(dbContext);
+
+            var result = controller.GetSignupById(182382);
+            // Assert
+            Assert.IsInstanceOf<OkObjectResult>(result);
+        }
+
+      
+
+        [Test]
+        public void UpdatePassword_PasswordMismatch_ReturnsBadRequestResult()
+        {
+            // Arrange
+            var email = "test@example.com";
+            var password = "newpassword";
+            var confirmPassword = "mismatchpassword";
+            var name = "name";
+            var mobile = 9373773732;
+            var isactive = true;
+
+            var user = new Signup
+            {
+                Email = email,
+                Password = "oldpassword", 
+                ConfirmPassword = "oldpassword",
+                Name=name,
+                Mobile = mobile,
+                Isactive=isactive
+                
+                
+            };
+
+            _context.Signup.Add(user);
+            _context.SaveChanges();
+
+            // Act
+            var result = _signupController.UpdatePassword(email, password, confirmPassword) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNull(result);
+        }
 
     }
 }
