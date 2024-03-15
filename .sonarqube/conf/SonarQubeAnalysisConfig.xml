@@ -104,7 +104,7 @@
     <Property Name="sonaranalyzer-vbnet.pluginKey">vbnet</Property>
     <Property Name="sonar.updatecenter.url">https://update.sonarsource.org/update-center.properties</Property>
     <Property Name="sonar.core.id">BF41A1F2-AY1_YeVnE4yHjzNdxExA</Property>
-    <Property Name="sonar.core.startTime">2/16/2024 5:26:16 AM</Property>
+    <Property Name="sonar.core.startTime">2/28/2024 6:15:33 AM</Property>
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.cs.vscoveragexml.reportsPaths">coverage.xml</Property>

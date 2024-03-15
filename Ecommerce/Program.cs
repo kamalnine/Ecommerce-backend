@@ -50,10 +50,11 @@ namespace Ecommerce.Models
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                   builder => builder.WithOrigins("http://localhost:3000")
-                   .AllowAnyHeader()
-                   .AllowAnyMethod()
-                   .WithExposedHeaders("Cross-Origin-Opener-Policy"));
+                    builder => builder
+                        .WithOrigins("http://localhost:8056","http://localhost:3000") // Allow requests from specific origin
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithExposedHeaders("Cross-Origin-Opener-Policy"));
             });
 
             // Configure DbContext
@@ -69,17 +70,20 @@ namespace Ecommerce.Models
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+            
                 app.UseDeveloperExceptionPage();
                 app.UseCors("AllowSpecificOrigin");
+
             }
             else
             {
                 app.UseHttpsRedirection();
             }
-
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            app.UseCors("AllowSpecificOrigin");
             app.UseRouting();
+          
 
             app.UseAuthentication();
             app.UseAuthorization();

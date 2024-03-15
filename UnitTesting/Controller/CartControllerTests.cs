@@ -82,7 +82,7 @@ namespace Ecommerce.Tests
             await _context.SaveChangesAsync();
 
             // Act
-            var result = await _controller.DeleteCart(cart.CartID);
+            var result =  _controller.DeleteCart(cart.CartID);
 
             // Assert
             Assert.IsInstanceOf<NoContentResult>(result);
@@ -143,7 +143,7 @@ namespace Ecommerce.Tests
             await _context.SaveChangesAsync();
 
             // Act
-            var result = await _controller.DeleteCartByCustomer(customerId);
+            var result =  _controller.DeleteCartByCustomer(customerId);
 
             // Assert
             Assert.IsInstanceOf<NoContentResult>(result);
@@ -174,7 +174,7 @@ namespace Ecommerce.Tests
             await _context.SaveChangesAsync();
 
             // Act
-            var result = await _controller.UpdateQuantity(productId, quantity);
+            var result =  _controller.UpdateQuantity(productId, quantity);
 
             // Assert
             Assert.IsInstanceOf<NoContentResult>(result);
@@ -205,7 +205,7 @@ namespace Ecommerce.Tests
             await _context.SaveChangesAsync();
 
             // Act
-            var result = await _controller.UpdateVariant(productId, variant);
+            var result = _controller.UpdateVariant(productId, variant);
 
             // Assert
             Assert.IsInstanceOf<NoContentResult>(result);

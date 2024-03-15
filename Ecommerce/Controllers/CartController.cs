@@ -26,14 +26,14 @@ namespace Ecommerce.Controllers
             return Ok(cart);
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCart(int id)
+        public ActionResult DeleteCart(int id)
         {
-            var cart = await _context.Cart.FirstAsync(p => p.ProductID == id);
+            var cart =  _context.Cart.First(p => p.ProductID == id);
 
             
 
             _context.Cart.Remove(cart);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return NoContent();
         }
@@ -47,38 +47,38 @@ namespace Ecommerce.Controllers
         }
 
         [HttpDelete("Customer/{customerId}")]
-        public async Task<IActionResult> DeleteCartByCustomer(int customerId)
+        public ActionResult DeleteCartByCustomer(int customerId)
         {
-            var carts = await _context.Cart.Where(c => c.CustomerID == customerId).ToListAsync();
+            var carts =  _context.Cart.Where(c => c.CustomerID == customerId).ToList();
 
            
 
             _context.Cart.RemoveRange(carts);
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
 
             return NoContent();
         }
         [HttpPut("UpdateQuantity/{productId}")]
-        public async Task<IActionResult> UpdateQuantity(int productId, [FromBody] int quantity)
+        public ActionResult UpdateQuantity(int productId, [FromBody] int quantity)
         {
-            var cartItem = await _context.Cart.FirstOrDefaultAsync(c => c.ProductID == productId);
+            var cartItem = _context.Cart.FirstOrDefault(c => c.ProductID == productId);
 
             
 
             cartItem.Quantity = quantity;
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
 
             return NoContent();
         }
 
         [HttpPut("UpdateVariant/{productId}")]
-        public async Task<IActionResult> UpdateVariant(int productId, [FromBody] string variant)
+        public ActionResult UpdateVariant(int productId, [FromBody] string variant)
         {
-            var cartItem = await _context.Cart.FirstOrDefaultAsync(c => c.ProductID == productId);
+            var cartItem =  _context.Cart.FirstOrDefault(c => c.ProductID == productId);
 
             
             cartItem.Variant = variant;
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return NoContent();
         }

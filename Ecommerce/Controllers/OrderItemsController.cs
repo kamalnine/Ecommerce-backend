@@ -34,14 +34,31 @@ namespace Ecommerce.Controllers
             try
             {
                 var orderItems = _context.OrderItems.Where(item => item.signupId == id).ToList();
+                DateTime today = DateTime.Today;
                 if (orderItems.Any())
                 {
+                    foreach (var item in orderItems)
+                    {
+                        // Check if shipDate is greater than today's date
+                        if (item.ShipDate.Date > today)
+                        {
+                            // Update the order status to "Delivered"
+                            var order = _context.Order.FirstOrDefault(o => o.OrderID == item.OrderId);
+                            if (order != null)
+                            {
+                                order.Status = "Delivered";
+                            }
+                        }
+                    }
+                    _context.SaveChanges();
                     return Ok(orderItems);
                 }
                 else
                 {
                     return NotFound();
                 }
+
+              
             }
             catch (Exception ex)
             {
